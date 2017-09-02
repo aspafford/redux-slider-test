@@ -1,4 +1,7 @@
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import { applyMiddleware, compose, createStore } from 'redux'
+import { connect, Provider } from 'react-redux'
 import logger from 'redux-logger'
 
 const INITIAL_VALUE = {
@@ -40,3 +43,37 @@ store.dispatch({type: "DOIT", index: 2, payload: 71})
 store.subscribe(() => {
   // console.log(store.getState())
 })
+
+const Slider = props =>
+  <div>
+    <input
+      type="range"
+      name="freq"
+      defaultValue={props.value}
+      onChange={props.sliderAction}
+    />
+    {props.value}
+  </div>
+
+const mapStateToProps = state => ({
+  sliders: state
+})
+
+const MappedSliders = props =>
+  <div>
+    {props.sliders.map((elem, index) => <Slider key={index} value={elem.num}/>)}
+  </div>
+
+const SliderCollection = connect(mapStateToProps)(MappedSliders)
+
+class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <SliderCollection/>
+      </Provider>
+    )
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById('root'))
