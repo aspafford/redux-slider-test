@@ -55,13 +55,34 @@ const Slider = props =>
     {props.value}
   </div>
 
+const sliderAction = (event, index) => {
+  return {
+    type: "DOIT",
+    index: index,
+    payload: parseInt(event.target.value)
+  }
+}
+
 const mapStateToProps = state => ({
   sliders: state
 })
 
+const mapDispatchProperties =
+  index =>
+    dispatch => {
+      return {
+        sliderAction: event => {
+          dispatch(sliderAction(event, index));
+        }
+      }
+    }
+
 const MappedSliders = props =>
   <div>
-    {props.sliders.map((elem, index) => <Slider key={index} value={elem.num}/>)}
+    {props.sliders.map((elem, index) =>
+      <Slider key={index} value={elem.num}
+        {...mapDispatchProperties(index)(props.dispatch)}/>
+    )}
   </div>
 
 const SliderCollection = connect(mapStateToProps)(MappedSliders)
