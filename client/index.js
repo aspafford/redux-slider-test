@@ -68,7 +68,16 @@ export const updateSlider = (index) => {
 const delayedEvent = (index) => {
   const thunk = (dispatch, getState) => {
     dispatch(updateSlider(index))
+    let s = getState()
+    let entity = s[index]
+    // axios put update
+    axios({
+      method:'put',
+      url: 'http://rest.learncode.academy/api/jobill/sliders/' + entity.id,
+      data: entity
+    })
   }
+
   thunk.meta = {
     debounce: {
       time: 2000,
