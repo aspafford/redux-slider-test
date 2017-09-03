@@ -10,6 +10,8 @@ import createDebounce from 'redux-debounced'
 
 const INITIAL_STATE = []
 
+const API_URL = 'http://rest.learncode.academy/api/user1ab75/collection'
+
 const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case "SAVING_SLIDER": {
@@ -73,7 +75,7 @@ const asyncSaveSlider = (index) => {
     // axios put update
     axios({
       method:'put',
-      url: 'http://rest.learncode.academy/api/jobill/sliders/' + entity.id,
+      url: API_URL + '/' + entity.id,
       data: entity
     })
   }
@@ -118,7 +120,7 @@ class App extends Component {
     // promise dispatches FOO_PENDING, FOO_REJECTED, FOO_FULILLED
     store.dispatch({
       type: 'SLIDERS',
-      payload: axios.get('http://rest.learncode.academy/api/jobill/sliders')
+      payload: axios.get(API_URL)
     })
   }
 
