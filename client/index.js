@@ -12,10 +12,13 @@ const INITIAL_STATE = []
 
 const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case "SAVING_SLIDER": {
+      break
+    }
     case "SLIDERS_FULFILLED": {
       return action.payload.data
     }
-    case "DOIT":{
+    case "UPDATE_SLIDER":{
       return state.map((item, index) => {
         if (index === action.index) {
           return {...item, num: action.payload}
@@ -42,7 +45,6 @@ const Slider = props =>
   <div>
     <input
       type="range"
-      name="freq"
       defaultValue={props.value}
       onChange={props.sliderAction}
     />
@@ -51,23 +53,21 @@ const Slider = props =>
 
 const sliderAction = (event, index) => {
   return {
-    type: "DOIT",
+    type: "UPDATE_SLIDER",
     index: index,
     payload: parseInt(event.target.value)
   }
 }
 
-export const updateSlider = (index) => {
+export const saveSlider = () => {
   return {
-    type: "DOIT2",
-    index: index,
-    payload: "yar"
+    type: "SAVING_SLIDER",
   }
 }
 
-const delayedEvent = (index) => {
+const asyncSaveSlider = (index) => {
   const thunk = (dispatch, getState) => {
-    dispatch(updateSlider(index))
+    dispatch(saveSlider())
     let s = getState()
     let entity = s[index]
     // axios put update
@@ -80,8 +80,8 @@ const delayedEvent = (index) => {
 
   thunk.meta = {
     debounce: {
-      time: 2000,
-      key: 'UPDATE_SLIDER'
+      time: 1000,
+      key: 'SAVE_SLIDER'
     }
   }
   return thunk
@@ -97,7 +97,7 @@ const mapDispatchProperties =
       return {
         sliderAction: event => {
           dispatch(sliderAction(event, index));
-          dispatch(delayedEvent(index))
+          dispatch(asyncSaveSlider(index))
         }
       }
     }
